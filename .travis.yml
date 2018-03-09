@@ -1,0 +1,54 @@
+sudo: required
+dist: trusty
+language: ruby
+
+before_install:
+- gem install asciidoctor -v 1.5.2
+- gem install tilt
+- sudo -H pip install git+https://github.com/gitenberg-dev/gitberg-build
+- sudo -H pip install git+https://github.com/gitenberg-dev/pg-epubmaker
+script:
+- VERSION=`ruby -e "require 'yaml'; meta = YAML.load_file('metadata.yaml'); puts meta['_version'];"`
+- git clone https://github.com/gitenberg-dev/asciidoctor-htmlbook.git
+- sudo -H pip install -r asciidoctor-htmlbook/gitberg-machine/requirements.txt
+
+- /usr/bin/python -c "from gitenberg import travis; travis.build_epub()"
+- ebook-convert book.epub book.mobi
+- xvfb-run ebook-convert book.epub book.pdf
+notifications:
+  webhooks:
+    urls:
+      - https://unglue.it/api/travisci/webhook
+    on_success: always
+    on_failure: never
+    on_start: never
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: aDtyibykUAGj8EvmpOnpmT0rYyWyYH+eECBHutDChgnmQ1MBXTgvf5vYeFy/bX1fgMlWBY8y363bsGa4jspZp0Kh7oXx8RalRrC/G9GT3ATUoCI5SeFcB/1WUEsj5IF0pV9ckQZ5s7SrsrMvqS5+it98Ygx+ofYAJYxB6OyW3eGQUQDPbAFJKABoF3p45JryNbhDdTlam71dVKhDTFqTGO8t84W1HK2Hrbjd2TfJzUNNYDj5NAFFQTucxKz+TKltEtqwYUUjKGYozLBpbKyiRTOQTR7gUJz3Wjb0+vm0kgWUnf23b+G4U9JRbff2U5cVjErMZV4Xf8pNG1JIGR59ttkci7/JMit4NWaLIN9i2w1xEgifD4+RjUL3mkNmIljSzZvO5FaIF5TFtPrXfNfLj5dZeX0NIln+JZu+1w0q5DTzrxZ/YtWU0EgUSiPDbSJDGLI24FUhyPUt+j78ZGGvHm6OY7tMgXm8tm5nhgdToNtBqyc5e6JI9yi7JcTF1jL95jHSKjVbpi/PnH6CEguW98vFenrB4BmZZU8DJUCRjwbb53Qf24boezBgFwSiw/F5RhB553eQ1CHoj2vipTHUtqDCpWE2P5HI1YSVHIdfSZ/qXplIdo3k3h9vlayBnT2X7nqFSQhsC5NOv8ZADSg285vKsBK3FFn/PbpKaGDuwDY=
+  file:
+    - book.epub
+    - book.mobi
+    - book.pdf
+  on:
+    repo: GITenberg/Flaubert-und-die-Herkunft-des-modernen-Romans_33328
+    tags: true
+addons:
+  apt:
+    packages:
+    - xsltproc
+    - xvfb
+    - calibre
+    - python-pip
+    - git
+    - python-dev
+    - libjpeg-dev
+    - libpng-dev
+    - libfreetype6
+    - libfreetype6-dev
+    - zlib1g-dev
+    - python-lxml
+    - libxml2-dev
+    - libxslt1-dev
+    - tidy
