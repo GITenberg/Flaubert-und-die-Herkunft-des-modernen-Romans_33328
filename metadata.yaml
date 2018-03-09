@@ -1,5 +1,5 @@
 _repo: Flaubert-und-die-Herkunft-des-modernen-Romans_33328
-_version: 0.1.0
+_version: 0.1.1
 covers:
 - cover_type: generated
   image_path: cover.png
@@ -14,6 +14,8 @@ creator:
     - http://de.wikipedia.org/wiki/Heinrich_Mann
     - http://en.wikipedia.org/wiki/Heinrich_Mann
 description: ''
+edition_identifiers:
+  edition_id: http://www.gutenberg.org/ebooks/33328#Flaubert-und-die-Herkunft-des-modernen-Romans
 gutenberg_bookshelf: DE Sachbuch
 gutenberg_issued: '2010-08-02'
 gutenberg_type: Text
